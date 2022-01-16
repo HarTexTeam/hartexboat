@@ -18,21 +18,12 @@
  * along with HartexBoat.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import * as logger from "../base/logger.ts";
-import { main } from "../driver/mod.ts";
+import "https://deno.land/x/dotenv/load.ts"
 
-await logger.setup({
-    handlers: {
-        console: new logger.handlers.ConsoleHandler("INFO", {
-            formatter: "{datetime} {levelName} {msg}"
-        })
-    },
-    loggers: {
-        default: {
-            level: "INFO",
-            handlers: [ "console" ]
-        }
+export class StartupVariables {
+    public botToken: string | undefined;
+
+    constructor() {
+        this.botToken = Deno.env.get("BOT_TOKEN");
     }
-});
-
-await main();
+}

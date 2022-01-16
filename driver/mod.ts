@@ -18,8 +18,10 @@
  * along with HartexBoat.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { createBot } from "../base/discord.ts";
+import { StartupVariables } from "../env/mod.ts"
 
-export function main(): void {
-    const thing = createBot();
+export async function main() {
+    const startup = new StartupVariables();
+
+    console.log(startup);
 }

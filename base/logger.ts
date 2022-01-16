@@ -18,21 +18,4 @@
  * along with HartexBoat.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import * as logger from "../base/logger.ts";
-import { main } from "../driver/mod.ts";
-
-await logger.setup({
-    handlers: {
-        console: new logger.handlers.ConsoleHandler("INFO", {
-            formatter: "{datetime} {levelName} {msg}"
-        })
-    },
-    loggers: {
-        default: {
-            level: "INFO",
-            handlers: [ "console" ]
-        }
-    }
-});
-
-await main();
+export * from "https://deno.land/x/std@0.121.0/log/mod.ts";
