@@ -20,5 +20,6 @@
 
 export * from "./discord.ts";
 export * from "./logger.ts";
+export * from "./rest.ts";
 
 export type RequestMethod = "get" | "post" | "put" | "delete" | "patch";

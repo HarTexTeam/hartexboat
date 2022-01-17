@@ -20,10 +20,9 @@
 
 import { RequestMethod } from "../base/lib.ts";
 
-import {
-    BASE_URL,
-    createRestManager
-} from "../base/discord.ts";
+import { BASE_URL } from "../base/discord.ts";
+
+import { restManager } from "../base/rest.ts";
 
 import * as logger from "../base/logger.ts";
 
@@ -36,12 +35,6 @@ import {
 
 await logger.initializeLoggerEnvironment();
 initializeEnvironments();
-
-const restManager = createRestManager({
-    token: startupVariables.botToken!,
-    secretKey: authorizationVariables.restAuthorizationKey,
-    customUrl: `http://localhost:${restVariables.restPort}`,
-});
 
 const restServer = Deno.listen({ port: restVariables.restPort! });
 logger.debug(`HTTP REST server for Discord API requests is started`);

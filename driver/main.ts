@@ -22,53 +22,33 @@ import {
     Bot,
     createBot,
     createRestManager,
-    GatewayIntents,
     GatewayPayload,
-    SnakeCasedPropertiesDeep
+    SnakeCasedPropertiesDeep,
 } from "../base/discord.ts";
 
 import * as logger from "../base/logger.ts";
 
 import {
+    gatewayIntents,
+    restManager,
+} from "../base/rest.ts";
+
+import {
     authorizationVariables,
     initializeEnvironments,
     restVariables,
-    startupVariables
+    startupVariables,
 } from "../env/lib.ts";
 
 import { initializeLoggerEnvironment } from "../base/logger.ts";
 
 import { setupEventHandlers } from "./eventHandlers/mod.ts";
 
-const gatewayIntents: (keyof typeof GatewayIntents)[] = [
-    "DirectMessageReactions",
-    "DirectMessageTyping",
-    "DirectMessages",
-    "GuildBans",
-    "GuildEmojis",
-    "GuildIntegrations",
-    "GuildInvites",
-    "GuildMembers",
-    "GuildMessageReactions",
-    "GuildMessageTyping",
-    "GuildMessages",
-    "GuildPresences",
-    "GuildVoiceStates",
-    "GuildWebhooks",
-    "Guilds",
-];
-
 await initializeLoggerEnvironment();
 
 logger.info("bot version: 0.0.0");
 
 initializeEnvironments();
-
-const restManager = createRestManager({
-    token: startupVariables.botToken!,
-    secretKey: authorizationVariables.restAuthorizationKey,
-    customUrl: `http://localhost:${restVariables.restPort}`,
-});
 
 export let bot: Bot;
 bot = createBot({
