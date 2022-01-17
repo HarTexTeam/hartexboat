@@ -19,3 +19,21 @@
  */
 
 export * from "https://deno.land/x/std@0.121.0/log/mod.ts";
+
+import * as logger from "https://deno.land/x/std@0.121.0/log/mod.ts";
+
+export async function initializeLoggerEnvironment() {
+    await logger.setup({
+        handlers: {
+            console: new logger.handlers.ConsoleHandler("DEBUG", {
+                formatter: "{datetime} {levelName} {msg}"
+            })
+        },
+        loggers: {
+            default: {
+                level: "DEBUG",
+                handlers: [ "console" ]
+            }
+        }
+    });
+}
