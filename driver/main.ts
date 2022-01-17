@@ -36,9 +36,9 @@ import {
     startupVariables
 } from "../env/lib.ts";
 
-import {
-    initializeLoggerEnvironment
-} from "../base/logger.ts";
+import { initializeLoggerEnvironment } from "../base/logger.ts";
+
+import { setupEventHandlers } from "./eventHandlers/mod.ts";
 
 const gatewayIntents: (keyof typeof GatewayIntents)[] = [
     "DirectMessageReactions",
@@ -60,7 +60,7 @@ const gatewayIntents: (keyof typeof GatewayIntents)[] = [
 
 await initializeLoggerEnvironment();
 
-logger.debug("bot version: 0.0.0");
+logger.info("bot version: 0.0.0");
 
 initializeEnvironments();
 
@@ -79,6 +79,9 @@ bot = createBot({
     token: startupVariables.botToken!,
 });
 bot.rest = restManager;
+
+logger.debug("setting up event handlers");
+setupEventHandlers();
 
 const restServer = Deno.listen({ port: restVariables.eventHandlerPort! });
 logger.debug(`HTTP REST server for event handler requests is started`);
@@ -134,6 +137,14 @@ async function handleRestConnection(connection: Deno.Conn) {
         };
 
         bot.events.raw(bot, json.data, json.shardId);
+
+        if (json.data.t && json.data.t !== "RESUMED") {
+            if (!["READY", "GUILD_LOADED_DD"].includes(json.data.t)) {
+                await bot.events.dispatchRequirements(bot, json.data, json.shardId);
+            }
+
+            bot.handlers[json.data.t]?.(bot, json.data, json.shardId);
+        }
 
         requestEvent.respondWith(
             new Response(

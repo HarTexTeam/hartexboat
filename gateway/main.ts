@@ -32,9 +32,7 @@ import {
     startupVariables
 } from "../env/lib.ts";
 
-import {
-    initializeLoggerEnvironment
-} from "../base/logger.ts";
+import { initializeLoggerEnvironment } from "../base/logger.ts";
 
 await initializeLoggerEnvironment();
 initializeEnvironments();
