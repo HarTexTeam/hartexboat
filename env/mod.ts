@@ -18,12 +18,20 @@
  * along with HartexBoat.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import "https://deno.land/x/dotenv/load.ts"
+import "https://deno.land/x/dotenv@v3.1.0/load.ts";
+import * as logger from "../base/logger.ts";
 
 export class StartupVariables {
+    public applicationId: bigint | undefined;
     public botToken: string | undefined;
 
     constructor() {
-        this.botToken = Deno.env.get("BOT_TOKEN");
+    }
+
+    public initialize() {
+        logger.debug("[env/mod.ts:29] retrieving environment variables for startup environment");
+
+        this.applicationId = BigInt(Deno.env.get("APPLICATION_ID")!);
+        this.botToken = Deno.env.get("BOT_TOKEN")!;
     }
 }

@@ -23,13 +23,13 @@ import { main } from "../driver/mod.ts";
 
 await logger.setup({
     handlers: {
-        console: new logger.handlers.ConsoleHandler("INFO", {
+        console: new logger.handlers.ConsoleHandler("DEBUG", {
             formatter: "{datetime} {levelName} {msg}"
         })
     },
     loggers: {
         default: {
-            level: "INFO",
+            level: "DEBUG",
             handlers: [ "console" ]
         }
     }

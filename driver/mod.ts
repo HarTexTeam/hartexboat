@@ -18,10 +18,41 @@
  * along with HartexBoat.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import { Bot, createBot, GatewayIntents } from "../base/discord.ts";
+import * as logger from "../base/logger.ts";
 import { StartupVariables } from "../env/mod.ts"
 
-export async function main() {
-    const startup = new StartupVariables();
+const gatewayIntents: (keyof typeof GatewayIntents)[] = [
+    "DirectMessageReactions",
+    "DirectMessageTyping",
+    "DirectMessages",
+    "GuildBans",
+    "GuildEmojis",
+    "GuildIntegrations",
+    "GuildInvites",
+    "GuildMembers",
+    "GuildMessageReactions",
+    "GuildMessageTyping",
+    "GuildMessages",
+    "GuildPresences",
+    "GuildVoiceStates",
+    "GuildWebhooks",
+    "Guilds",
+];
 
-    console.log(startup);
+export let bot: Bot;
+
+export async function main() {
+    logger.info("[driver/mod.ts:46] bot version: 0.0.0");
+
+    const startup = new StartupVariables();
+    startup.initialize();
+
+    bot = createBot({
+        applicationId: startup.applicationId,
+        botId: startup.applicationId!,
+        events: {},
+        intents: gatewayIntents,
+        token: startup.botToken!,
+    })
 }
