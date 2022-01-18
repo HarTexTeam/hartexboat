@@ -24,7 +24,7 @@ import { bot } from "../main.ts";
 
 export function setReadyEventHandler() {
     bot.events.ready = async function(_bot, payload, _raw) {
-        let selfUser = payload.user;
+        const selfUser = payload.user;
 
         logger.info(`${selfUser.username}#${selfUser.discriminator} [user id: ${selfUser.id}] is connected to the Discord gateway; utilizing API version ${payload.v}`);
     }

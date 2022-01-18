@@ -22,48 +22,40 @@ import "https://deno.land/x/dotenv@v3.1.0/load.ts";
 
 import * as logger from "../base/logger.ts";
 
-export class AuthorizationVariables {
-    public eventHandlerAuthorizationKey: string | undefined;
-    public restAuthorizationKey: string | undefined;
-
-    constructor() {
-        logger.debug("retrieving environment variables for authorization environment");
-
-        this.eventHandlerAuthorizationKey = Deno.env.get("EVENT_HANDLER_AUTHORIZATION_KEY");
-        this.restAuthorizationKey = Deno.env.get("REST_AUTHORIZATION_KEY");
-    }
+export interface AuthorizationVariables {
+    eventHandlerAuthorizationKey: string | undefined;
+    restAuthorizationKey: string | undefined;
 }
 
-export class RestVariables {
-    public eventHandlerPort: number | undefined;
-    public restPort: number | undefined;
-
-    constructor() {
-        logger.debug("retrieving environment variables for rest environment");
-
-        this.eventHandlerPort = Number(Deno.env.get("EVENT_HANDLER_PORT")!);
-        this.restPort = Number(Deno.env.get("REST_PORT")!);
-    }
+export interface RestVariables {
+    eventHandlerPort: number | undefined;
+    restPort: number | undefined;
 }
 
-export class StartupVariables {
-    public applicationId: bigint | undefined;
-    public botToken: string | undefined;
-
-    constructor() {
-        logger.debug("retrieving environment variables for startup environment");
-
-        this.applicationId = BigInt(Deno.env.get("APPLICATION_ID")!);
-        this.botToken = Deno.env.get("BOT_TOKEN")!;
-    }
+export interface StartupVariables {
+    applicationId: bigint | undefined;
+    botToken: string | undefined;
 }
 
 export let authorizationVariables: AuthorizationVariables;
 export let restVariables: RestVariables;
 export let startupVariables: StartupVariables;
 
-export function initializeEnvironments() {
-    authorizationVariables = new AuthorizationVariables();
-    restVariables = new RestVariables();
-    startupVariables = new StartupVariables();
+export function createEnvironments() {
+    logger.debug("creating environment variables for later use")
+
+    authorizationVariables = {
+        eventHandlerAuthorizationKey: Deno.env.get("EVENT_HANDLER_AUTHORIZATION_KEY"),
+        restAuthorizationKey: Deno.env.get("REST_AUTHORIZATION_KEY"),
+    } as AuthorizationVariables;
+
+    restVariables = {
+        eventHandlerPort: Number(Deno.env.get("EVENT_HANDLER_PORT")!),
+        restPort: Number(Deno.env.get("REST_PORT")!),
+    } as RestVariables;
+
+    startupVariables = {
+        applicationId: BigInt(Deno.env.get("APPLICATION_ID")!),
+        botToken: Deno.env.get("BOT_TOKEN")!
+    } as StartupVariables;
 }

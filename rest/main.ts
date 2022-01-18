@@ -28,13 +28,12 @@ import * as logger from "../base/logger.ts";
 
 import {
     authorizationVariables,
-    initializeEnvironments,
+    createEnvironments,
     restVariables,
-    startupVariables
 } from "../env/lib.ts";
 
-await logger.initializeLoggerEnvironment();
-initializeEnvironments();
+await logger.createLoggerEnvironment();
+createEnvironments();
 
 const restServer = Deno.listen({ port: restVariables.restPort! });
 logger.debug(`HTTP REST server for Discord API requests is started`);

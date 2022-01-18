@@ -21,7 +21,6 @@
 import {
     Bot,
     createBot,
-    createRestManager,
     GatewayPayload,
     SnakeCasedPropertiesDeep,
 } from "../base/discord.ts";
@@ -35,23 +34,22 @@ import {
 
 import {
     authorizationVariables,
-    initializeEnvironments,
+    createEnvironments,
     restVariables,
     startupVariables,
 } from "../env/lib.ts";
 
-import { initializeLoggerEnvironment } from "../base/logger.ts";
+import { createLoggerEnvironment } from "../base/logger.ts";
 
 import { setupEventHandlers } from "./eventHandlers/mod.ts";
 
-await initializeLoggerEnvironment();
+await createLoggerEnvironment();
 
 logger.info("bot version: 0.0.0");
 
-initializeEnvironments();
+createEnvironments();
 
-export let bot: Bot;
-bot = createBot({
+export const bot: Bot = createBot({
     applicationId: startupVariables.applicationId,
     botId: startupVariables.applicationId!,
     events: {},

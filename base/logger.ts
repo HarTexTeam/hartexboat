@@ -22,7 +22,7 @@ export * from "https://deno.land/x/std@0.121.0/log/mod.ts";
 
 import * as logger from "https://deno.land/x/std@0.121.0/log/mod.ts";
 
-export async function initializeLoggerEnvironment() {
+export async function createLoggerEnvironment() {
     await logger.setup({
         handlers: {
             console: new logger.handlers.ConsoleHandler("DEBUG", {

@@ -30,12 +30,12 @@ import * as logger from "./logger.ts";
 
 import {
     authorizationVariables,
-    initializeEnvironments,
+    createEnvironments,
     restVariables,
     startupVariables,
 } from "../env/lib.ts";
 
-initializeEnvironments();
+createEnvironments();
 
 export const restManager = createRestManager({
     token: startupVariables.botToken!,
