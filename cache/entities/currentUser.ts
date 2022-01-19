@@ -24,7 +24,8 @@ import {
     Entity,
     EntityId,
 } from "../entity.ts";
-import {Repository} from "../repository.ts";
+
+import { Repository } from "../repository.ts";
 
 export interface CurrentUserEntity extends Entity {
     avatar?: string;
@@ -42,7 +43,9 @@ export interface CurrentUserEntity extends Entity {
     uniqueEntityId: EntityId;
 }
 
-export interface CurrentUserRepository extends Repository<CurrentUserEntity> {}
+export interface CurrentUserRepository extends Repository<CurrentUserEntity> {
+    upsert: (entity: CurrentUserEntity) => Promise<void>;
+}
 
 export function createCurrentUserEntity(user: User): CurrentUserEntity {
     return {

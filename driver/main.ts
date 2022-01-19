@@ -41,6 +41,8 @@ import {
 
 import { createLoggerEnvironment } from "../base/logger.ts";
 
+import { extendBotWithPostgresCache } from "../cache/lib.ts";
+
 import { setupEventHandlers } from "./eventHandlers/mod.ts";
 
 await createLoggerEnvironment();
@@ -49,14 +51,16 @@ logger.info("bot version: 0.0.0");
 
 createEnvironments();
 
-export const bot: Bot = createBot({
+const baseBot: Bot = createBot({
     applicationId: startupVariables.applicationId,
     botId: startupVariables.applicationId!,
     events: {},
     intents: gatewayIntents,
     token: startupVariables.botToken!,
 });
-bot.rest = restManager;
+baseBot.rest = restManager;
+
+export const bot = extendBotWithPostgresCache(baseBot);
 
 logger.debug("setting up event handlers");
 setupEventHandlers();

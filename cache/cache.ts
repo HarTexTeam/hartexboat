@@ -18,14 +18,22 @@
  * along with HartexBoat.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import { Bot } from "../base/discord.ts";
+
 import { CurrentUserRepository } from "./entities/currentUser.ts";
 
-export interface PostgresCache {
+export type BotWithPostgresCache = Bot & PostgresCache;
+
+export interface PostgresCache extends Bot {
+    postgresCache: PostgresCacheRepositories;
+}
+
+export interface PostgresCacheRepositories {
     currentUserRepository: CurrentUserRepository;
 }
 
-export function createPostgresCache(): PostgresCache {
+export function createPostgresCacheRepositories(): PostgresCacheRepositories {
     return {
         currentUserRepository: { } as CurrentUserRepository,
-    } as PostgresCache;
+    } as PostgresCacheRepositories;
 }
