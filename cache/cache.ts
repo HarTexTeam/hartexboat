@@ -2,7 +2,7 @@
  * This file is a part of HartexBoat.
  *
  * HartexBoat, a Discord Bot
- * Copyright (C) <year>  <name of author>
+ * Copyright (C) 2021 HarTex Community
  *
  * HartexBoat is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published
@@ -19,6 +19,7 @@
  */
 
 import { Bot } from "../base/discord.ts";
+import * as postgres from "../base/postgres.ts";
 
 import { CurrentUserRepository } from "./entities/currentUser.ts";
 

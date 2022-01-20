@@ -2,7 +2,7 @@
  * This file is a part of HartexBoat.
  *
  * HartexBoat, a Discord Bot
- * Copyright (C) <year>  <name of author>
+ * Copyright (C) 2021 HarTex Community
  *
  * HartexBoat is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published
@@ -39,13 +39,11 @@ import {
     startupVariables,
 } from "../env/lib.ts";
 
-import { createLoggerEnvironment } from "../base/logger.ts";
-
 import { extendBotWithPostgresCache } from "../cache/lib.ts";
 
 import { setupEventHandlers } from "./eventHandlers/mod.ts";
 
-await createLoggerEnvironment();
+await logger.createLoggerEnvironment();
 
 logger.info("bot version: 0.0.0");
 

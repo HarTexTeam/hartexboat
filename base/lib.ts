@@ -2,7 +2,7 @@
  * This file is a part of HartexBoat.
  *
  * HartexBoat, a Discord Bot
- * Copyright (C) <year>  <name of author>
+ * Copyright (C) 2021 HarTex Community
  *
  * HartexBoat is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published
@@ -20,6 +20,7 @@
 
 export * from "./discord.ts";
 export * from "./logger.ts";
+export * from "./postgres.ts";
 export * from "./rest.ts";
 
 export type RequestMethod = "get" | "post" | "put" | "delete" | "patch";

@@ -18,4 +18,4 @@
  * along with HartexBoat.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-export * from "./currentUser.ts";
+export * from "https://deno.land/x/postgres@v0.15.0/mod.ts";

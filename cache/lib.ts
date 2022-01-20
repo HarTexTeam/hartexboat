@@ -2,7 +2,7 @@
  * This file is a part of HartexBoat.
  *
  * HartexBoat, a Discord Bot
- * Copyright (C) <year>  <name of author>
+ * Copyright (C) 2021 HarTex Community
  *
  * HartexBoat is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published
@@ -18,16 +18,16 @@
  * along with HartexBoat.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import {
-    BotWithPostgresCache,
-    createPostgresCacheRepositories,
-} from "./cache.ts";
-
 export * from "./entities/mod.ts";
 export * from "./entity.ts";
 export * from "./repository.ts";
 
 import { Bot } from "../base/discord.ts";
+
+import {
+    BotWithPostgresCache,
+    createPostgresCacheRepositories,
+} from "./cache.ts";
 
 export function extendBotWithPostgresCache(bot: Bot): BotWithPostgresCache {
     const botWithPostgresCache = bot as BotWithPostgresCache;
