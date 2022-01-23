@@ -69,7 +69,7 @@ export function createDetaCacheRepositories(): DetaCacheRepositories {
                 const bodyObject = {
                     items: [
                         {
-                            key: entity.uniqueEntityId,
+                            key: "currentUser",
                             avatar: entity.avatar,
                             bot: entity.bot,
                             discriminator: entity.discriminator,

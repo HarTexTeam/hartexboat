@@ -33,9 +33,5 @@ export function setReadyEventHandler() {
         const currentUser = fromUser(selfUser);
 
         await bot.detaCache.currentUserRepository.upsert(currentUser);
-
-        const user = await bot.detaCache.currentUserRepository.get();
-
-        logger.debug(`CACHE TEST: ${user.name}`);
     }
 }
