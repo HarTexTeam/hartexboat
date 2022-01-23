@@ -18,14 +18,14 @@
  * along with HartexBoat.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { PremiumTypes, User, UserFlags } from "../../base/discord.ts";
+import { PremiumTypes, DiscordenoUser, UserFlags } from "../../base/discord.ts";
 
 import {
     Entity,
     EntityId,
 } from "../entity.ts";
 
-import { Repository } from "../repository.ts";
+import { SingleEntityRepository } from "../repository.ts";
 
 export interface CurrentUserEntity extends Entity {
     avatar?: string;
@@ -43,24 +43,25 @@ export interface CurrentUserEntity extends Entity {
     uniqueEntityId: EntityId;
 }
 
-export interface CurrentUserRepository extends Repository<CurrentUserEntity> {
+export interface CurrentUserRepository extends SingleEntityRepository<CurrentUserEntity> {
+    get: () => Promise<CurrentUserEntity>;
     upsert: (entity: CurrentUserEntity) => Promise<void>;
 }
 
-export function createCurrentUserEntity(user: User): CurrentUserEntity {
+export function fromUser(user: DiscordenoUser): CurrentUserEntity {
     return {
-        avatar: user.avatar ? user.avatar! : undefined,
+        avatar: user.avatar ? user.avatar.toString()! : undefined,
         bot: user.bot,
-        discriminator: user.discriminator,
+        discriminator: user.discriminator.toString(),
         email: user.email ? user.email! : undefined,
         flags: user.flags,
-        id: user.id,
+        id: user.id.toString(),
         mfaEnabled: user.mfaEnabled,
         name: user.username,
         premiumType: user.premiumType,
         publicFlags: user.publicFlags,
         verified: user.verified,
 
-        uniqueEntityId: user.id,
+        uniqueEntityId: user.id.toString(),
     } as CurrentUserEntity;
 }

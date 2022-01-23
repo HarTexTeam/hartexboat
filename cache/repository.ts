@@ -23,3 +23,8 @@ import { Entity } from "./entity.ts";
 export interface Repository<E extends Entity> {
     upsert: (entity: E) => Promise<void>;
 }
+
+export interface SingleEntityRepository<E extends Entity> {
+    get: () => Promise<E>;
+    upsert: (entity: E) => Promise<void>;
+}

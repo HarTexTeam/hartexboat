@@ -20,6 +20,8 @@
 
 import * as logger from "../../base/logger.ts";
 
+import { fromUser } from "../../cache/entities/currentUser.ts";
+
 import { bot } from "../main.ts";
 
 export function setReadyEventHandler() {
@@ -27,5 +29,9 @@ export function setReadyEventHandler() {
         const selfUser = payload.user;
 
         logger.info(`${selfUser.username}#${selfUser.discriminator} [user id: ${selfUser.id}] is connected to the Discord gateway; utilizing API version ${payload.v}`);
+
+        const currentUser = fromUser(selfUser);
+
+        await bot.detaCache.currentUserRepository.upsert(currentUser);
     }
 }

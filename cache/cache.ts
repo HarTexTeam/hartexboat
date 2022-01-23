@@ -19,22 +19,52 @@
  */
 
 import { Bot } from "../base/discord.ts";
-import * as postgres from "../base/postgres.ts";
+import { detaVariables } from "../env/lib.ts";
 
-import { CurrentUserRepository } from "./entities/currentUser.ts";
+import { CurrentUserEntity, CurrentUserRepository } from "./entities/currentUser.ts";
 
-export type BotWithPostgresCache = Bot & PostgresCache;
+export type BotWithDetaCache = Bot & DetaCache;
 
-export interface PostgresCache extends Bot {
-    postgresCache: PostgresCacheRepositories;
+export interface DetaCache extends Bot {
+    detaCache: DetaCacheRepositories;
 }
 
-export interface PostgresCacheRepositories {
+export interface DetaCacheRepositories {
     currentUserRepository: CurrentUserRepository;
 }
 
-export function createPostgresCacheRepositories(): PostgresCacheRepositories {
+export function createDetaCacheRepositories(): DetaCacheRepositories {
     return {
-        currentUserRepository: { } as CurrentUserRepository,
-    } as PostgresCacheRepositories;
+        currentUserRepository: { 
+            upsert: async (entity: CurrentUserEntity) => {
+                const bodyObject = {
+                    items: [
+                        {
+                            key: entity.uniqueEntityId,
+                            avatar: entity.avatar,
+                            bot: entity.bot,
+                            discriminator: entity.discriminator,
+                            email: entity.email,
+                            flags: entity.flags,
+                            id: entity.id,
+                            mfaEnabled: entity.mfaEnabled,
+                            name: entity.name,
+                            premiumType: entity.premiumType,
+                            publicFlags: entity.publicFlags,
+                            verified: entity.verified,
+                        }
+                    ],
+                };
+
+                await fetch(`https://database.deta.sh/v1/${detaVariables.detaProjectId}/current_user_repository/items`, {
+                    body: JSON.stringify(bodyObject),
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-API-Key": detaVariables.detaProjectKey!,
+                    },
+                    method: "PUT",
+                });
+            },
+        } as CurrentUserRepository,
+    } as DetaCacheRepositories;
 }

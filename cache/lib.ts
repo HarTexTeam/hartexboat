@@ -25,13 +25,13 @@ export * from "./repository.ts";
 import { Bot } from "../base/discord.ts";
 
 import {
-    BotWithPostgresCache,
-    createPostgresCacheRepositories,
+    BotWithDetaCache,
+    createDetaCacheRepositories,
 } from "./cache.ts";
 
-export function extendBotWithPostgresCache(bot: Bot): BotWithPostgresCache {
-    const botWithPostgresCache = bot as BotWithPostgresCache;
-    botWithPostgresCache.postgresCache = createPostgresCacheRepositories();
+export function extendBotWithDetaCache(bot: Bot): BotWithDetaCache {
+    const BotWithDetaCache = bot as BotWithDetaCache;
+    BotWithDetaCache.detaCache = createDetaCacheRepositories();
 
-    return botWithPostgresCache;
+    return BotWithDetaCache;
 }

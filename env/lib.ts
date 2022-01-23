@@ -27,8 +27,9 @@ export interface AuthorizationVariables {
     restAuthorizationKey: string | undefined;
 }
 
-export interface DatabaseVariables {
-    pgsqlCacheDbCredentials: string | undefined;
+export interface DetaVariables {
+    detaProjectId: string | undefined;
+    detaProjectKey: string | undefined;
 }
 
 export interface RestVariables {
@@ -42,7 +43,7 @@ export interface StartupVariables {
 }
 
 export let authorizationVariables: AuthorizationVariables;
-export let databaseVariables: DatabaseVariables;
+export let detaVariables: DetaVariables;
 export let restVariables: RestVariables;
 export let startupVariables: StartupVariables;
 
@@ -54,9 +55,10 @@ export function createEnvironments() {
         restAuthorizationKey: Deno.env.get("REST_AUTHORIZATION_KEY"),
     } as AuthorizationVariables;
 
-    databaseVariables = {
-        pgsqlCacheDbCredentials: Deno.env.get("PGSQL_CACHEDB_CREDENTIALS"),
-    } as DatabaseVariables;
+    detaVariables = {
+        detaProjectId: Deno.env.get("DETA_PROJECT_ID"),
+        detaProjectKey: Deno.env.get("DETA_PROJECT_KEY"),
+    } as DetaVariables;
 
     restVariables = {
         eventHandlerPort: Number(Deno.env.get("EVENT_HANDLER_PORT")!),

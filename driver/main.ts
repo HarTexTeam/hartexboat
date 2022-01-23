@@ -39,7 +39,7 @@ import {
     startupVariables,
 } from "../env/lib.ts";
 
-import { extendBotWithPostgresCache } from "../cache/lib.ts";
+import { extendBotWithDetaCache } from "../cache/lib.ts";
 
 import { setupEventHandlers } from "./eventHandlers/mod.ts";
 
@@ -58,7 +58,7 @@ const baseBot: Bot = createBot({
 });
 baseBot.rest = restManager;
 
-export const bot = extendBotWithPostgresCache(baseBot);
+export const bot = extendBotWithDetaCache(baseBot);
 
 logger.debug("setting up event handlers");
 setupEventHandlers();
