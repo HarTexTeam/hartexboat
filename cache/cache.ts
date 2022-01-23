@@ -35,7 +35,36 @@ export interface DetaCacheRepositories {
 
 export function createDetaCacheRepositories(): DetaCacheRepositories {
     return {
-        currentUserRepository: { 
+        currentUserRepository: {
+            get: async () => {
+                const response = await fetch(`https://database.deta.sh/v1/${detaVariables.detaProjectId}/CurrentUserRepository/items/currentUser`, {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-API-Key": detaVariables.detaProjectKey!,
+                    },
+                    method: "GET",
+                });
+
+                if (response.ok) {
+                    const json = await response.json();
+
+                    return {
+                        avatar: json.avatar,
+                        bot: json.bot,
+                        discriminator: json.discriminator,
+                        email: json.email,
+                        flags: json.flags,
+                        id: json.id,
+                        mfaEnabled: json.mfaEnabled,
+                        name: json.name,
+                        premiumType: json.premiumType,
+                        publicFlags: json.publicFlags,
+                        verified: json.verified,
+
+                        uniqueEntityId: json.key,
+                    } as CurrentUserEntity;
+                }
+            },
             upsert: async (entity: CurrentUserEntity) => {
                 const bodyObject = {
                     items: [
@@ -56,7 +85,7 @@ export function createDetaCacheRepositories(): DetaCacheRepositories {
                     ],
                 };
 
-                await fetch(`https://database.deta.sh/v1/${detaVariables.detaProjectId}/current_user_repository/items`, {
+                await fetch(`https://database.deta.sh/v1/${detaVariables.detaProjectId}/CurrentUserRepository/items`, {
                     body: JSON.stringify(bodyObject),
                     headers: {
                         "Content-Type": "application/json",
