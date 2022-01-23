@@ -30,8 +30,8 @@ import {
 } from "./cache.ts";
 
 export function extendBotWithDetaCache(bot: Bot): BotWithDetaCache {
-    const BotWithDetaCache = bot as BotWithDetaCache;
-    BotWithDetaCache.detaCache = createDetaCacheRepositories();
+    const botWithDetaCache = bot as BotWithDetaCache;
+    botWithDetaCache.detaCache = createDetaCacheRepositories();
 
-    return BotWithDetaCache;
+    return botWithDetaCache;
 }

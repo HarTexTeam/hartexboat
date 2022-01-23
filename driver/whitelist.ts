@@ -18,19 +18,25 @@
  * along with HartexBoat.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import * as logger from "../../base/logger.ts";
+import { detaVariables } from "../env/lib.ts";
 
-import { fromUser } from "../../cache/entities/currentUser.ts";
+export async function setupWhitelistDatabase() {
+    const baseWhitelistObject = {
+        items: [
+            {
+                key: "886101109331075103",
+                id: "886101109331075103",
+                name: "HarTex Community",
+            }
+        ]
+    };
 
-import { bot } from "../main.ts";
-
-export function setReadyEventHandler() {
-    bot.events.ready = async (_bot, payload, _raw) => {
-        const selfUser = payload.user;
-
-        logger.info(`${selfUser.username}#${selfUser.discriminator} [user id: ${selfUser.id}] is connected to the Discord gateway; utilizing API version ${payload.v}`);
-
-        const currentUser = fromUser(selfUser);
-        await bot.detaCache.currentUserRepository.upsert(currentUser);
-    }
+    await fetch(`https://database.deta.sh/v1/${detaVariables.detaProjectId}/Whitelists/items`, {
+        body: JSON.stringify(baseWhitelistObject),
+        headers: {
+            "Content-Type": "application/json",
+            "X-API-Key": detaVariables.detaProjectKey!,
+        },
+        method: "PUT",
+    });
 }

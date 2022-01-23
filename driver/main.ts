@@ -43,6 +43,8 @@ import { extendBotWithDetaCache } from "../cache/lib.ts";
 
 import { setupEventHandlers } from "./eventHandlers/mod.ts";
 
+import { setupWhitelistDatabase } from "./whitelist.ts";
+
 await logger.createLoggerEnvironment();
 
 logger.info("bot version: 0.0.0");
@@ -62,6 +64,9 @@ export const bot = extendBotWithDetaCache(baseBot);
 
 logger.debug("setting up event handlers");
 setupEventHandlers();
+
+logger.debug("setting up whitelist database");
+await setupWhitelistDatabase();
 
 const restServer = Deno.listen({ port: restVariables.eventHandlerPort! });
 logger.debug(`HTTP REST server for event handler requests is started`);
@@ -100,7 +105,7 @@ async function handleRestConnection(connection: Deno.Conn) {
                     new Response(
                         JSON.stringify({
                             code: 405,
-                            errorIdentifier: "ERROR_HTTP401_METHOD_NOT_ALLOWED",
+                            errorIdentifier: "ERROR_HTTP405_METHOD_NOT_ALLOWED",
                             message: "only the `POST` method is allowed for this server"
                         }),
                         {

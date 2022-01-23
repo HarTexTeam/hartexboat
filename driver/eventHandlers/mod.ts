@@ -18,8 +18,10 @@
  * along with HartexBoat.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import { setGuildLoadedEventHandler } from "./guildLoaded.ts";
 import { setReadyEventHandler } from "./ready.ts";
 
 export function setupEventHandlers() {
+    setGuildLoadedEventHandler();
     setReadyEventHandler();
 }
