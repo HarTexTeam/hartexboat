@@ -50,10 +50,10 @@ export interface CurrentUserRepository extends SingleEntityRepository<CurrentUse
 
 export function fromUser(user: DiscordenoUser): CurrentUserEntity {
     return {
-        avatar: user.avatar ? user.avatar.toString()! : undefined,
+        avatar: user.avatar?.toString(),
         bot: user.bot,
         discriminator: user.discriminator.toString(),
-        email: user.email ? user.email! : undefined,
+        email: user?.email,
         flags: user.flags,
         id: user.id.toString(),
         mfaEnabled: user.mfaEnabled,

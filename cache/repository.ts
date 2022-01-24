@@ -18,9 +18,10 @@
  * along with HartexBoat.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { Entity } from "./entity.ts";
+import { Entity, EntityId } from "./entity.ts";
 
 export interface Repository<E extends Entity> {
+    get: (entityId: EntityId) => Promise<E>;
     upsert: (entity: E) => Promise<void>;
 }
 

@@ -18,33 +18,32 @@
  * along with HartexBoat.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import { getItemWithKey } from "../../base/deta.ts";
+
 import * as logger from "../../base/logger.ts";
 
 import { leaveGuild } from "../../base/discord.ts";
 
-import { detaVariables } from "../../env/lib.ts";
+import { fromGuild } from "../../cache/entities/guild.ts";
 
 import { bot } from "../main.ts";
 
 export function setGuildLoadedEventHandler() {
-    bot.events.guildLoaded = async (bot, guild) => {
+    bot.events.guildLoaded = async (denoBot, guild) => {
         logger.debug(`new guild loaded with id ${guild.id}; checking whether the guild is whitelisted`);
 
-        const response = await fetch(`https://database.deta.sh/v1/${detaVariables.detaProjectId}/Whitelists/items/${guild.id}`, {
-            headers: {
-                "Content-Type": "application/json",
-                "X-API-Key": detaVariables.detaProjectKey!,
-            },
-            method: "GET",
-        });
+        const response = await getItemWithKey("Whitelists", `${guild.id}`);
 
         if (response.status === 404) {
             logger.debug("guild is not whitelisted, leaving guild");
-            await leaveGuild(bot, guild.id);
+            await leaveGuild(denoBot, guild.id);
 
             return;
         }
 
         logger.debug("guild is whitelisted");
+
+        const guildEntity = fromGuild(guild);
+        await bot.detaCache.guildRepository.upsert(guildEntity);
     };
 }

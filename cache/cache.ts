@@ -18,10 +18,13 @@
  * along with HartexBoat.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import { addItems, getItemWithKey } from "../base/deta.ts";
+
 import { Bot } from "../base/discord.ts";
-import { detaVariables } from "../env/lib.ts";
 
 import { CurrentUserEntity, CurrentUserRepository } from "./entities/currentUser.ts";
+import { GuildEntity, GuildRepository } from "./entities/guild.ts";
+import { EntityId } from "./entity.ts";
 
 export type BotWithDetaCache = Bot & DetaCache;
 
@@ -31,19 +34,14 @@ export interface DetaCache extends Bot {
 
 export interface DetaCacheRepositories {
     currentUserRepository: CurrentUserRepository;
+    guildRepository: GuildRepository;
 }
 
 export function createDetaCacheRepositories(): DetaCacheRepositories {
     return {
         currentUserRepository: {
             get: async () => {
-                const response = await fetch(`https://database.deta.sh/v1/${detaVariables.detaProjectId}/CurrentUserRepository/items/currentUser`, {
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-API-Key": detaVariables.detaProjectKey!,
-                    },
-                    method: "GET",
-                });
+                const response = await getItemWithKey("CurrentUserRepository", "currentUser");
 
                 if (response.ok) {
                     const json = await response.json();
@@ -85,15 +83,65 @@ export function createDetaCacheRepositories(): DetaCacheRepositories {
                     ],
                 };
 
-                await fetch(`https://database.deta.sh/v1/${detaVariables.detaProjectId}/CurrentUserRepository/items`, {
-                    body: JSON.stringify(bodyObject),
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-API-Key": detaVariables.detaProjectKey!,
-                    },
-                    method: "PUT",
-                });
+                await addItems("CurrentUserRepository", bodyObject);
             },
         } as CurrentUserRepository,
+        guildRepository: {
+            upsert: async (entity: GuildEntity) => {
+                const bodyObject = {
+                    items: [
+                        {
+                            key: entity.uniqueEntityId,
+                            afkChannelId: entity.afkChannelId,
+                            afkTimeout: entity.afkTimeout,
+                            applicationId: entity.applicationId,
+                            approximateMemberCount: entity.approximateMemberCount,
+                            approximatePresenceCount: entity.approximatePresenceCount,
+                            banner: entity.banner,
+                            defaultMessageNotifications: entity.defaultMessageNotifications,
+                            description: entity.description,
+                            discoverySplash: entity.discoverySplash,
+                            emojiIds: entity.emojiIds,
+                            explicitContentFilter: entity.explicitContentFilter,
+                            features: entity.features,
+                            icon: entity.icon,
+                            iconHash: entity.iconHash,
+                            id: entity.id,
+                            joinedAt: entity.joinedAt,
+                            large: entity.large,
+                            maxMembers: entity.maxMembers,
+                            maxPresences: entity.maxPresences,
+                            maxVideoChannelUsers: entity.maxVideoChannelUsers,
+                            memberCount: entity.memberCount,
+                            mfaLevel: entity.mfaLevel,
+                            name: entity.name,
+                            nsfwLevel: entity.nsfwLevel,
+                            ownerId: entity.ownerId,
+                            permissions: entity.permissions,
+                            preferredLocale: entity.preferredLocale,
+                            premiumProgressBarEnabled: entity.premiumProgressBarEnabled,
+                            premiumSubscriptionCount: entity.premiumSubscriptionCount,
+                            premiumTier: entity.premiumTier,
+                            publicUpdatesChannelId: entity.publicUpdatesChannelId,
+                            roleIds: entity.roleIds,
+                            rulesChannelId: entity.rulesChannelId,
+                            splash: entity.splash,
+                            stageInstanceIds: entity.stageInstanceIds,
+                            systemChannelFlags: entity.systemChannelFlags,
+                            systemChannelId: entity.systemChannelId,
+                            threadIds: entity.threadIds,
+                            unavailable: entity.unavailable,
+                            vanityUrlCode: entity.vanityUrlCode,
+                            voiceStateUserIds: entity.voiceStateUserIds,
+                            welcomeScreen: entity.welcomeScreen,
+                            widgetChannelId: entity.widgetChannelId,
+                            widgetEnabled: entity.widgetEnabled,
+                        }
+                    ]
+                };
+
+                await addItems("GuildRepository", bodyObject);
+            },
+        } as GuildRepository,
     } as DetaCacheRepositories;
 }

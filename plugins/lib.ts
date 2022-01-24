@@ -17,20 +17,3 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with HartexBoat.  If not, see <https://www.gnu.org/licenses/>.
  */
-
-import * as logger from "../../base/logger.ts";
-
-import { fromUser } from "../../cache/entities/currentUser.ts";
-
-import { bot } from "../main.ts";
-
-export function setReadyEventHandler() {
-    bot.events.ready = async (_bot, payload, _raw) => {
-        const selfUser = payload.user;
-
-        logger.info(`${selfUser.username}#${selfUser.discriminator} [user id: ${selfUser.id}] is connected to the Discord gateway; utilizing API version ${payload.v}`);
-
-        const currentUserEntity = fromUser(selfUser);
-        await bot.detaCache.currentUserRepository.upsert(currentUserEntity);
-    }
-}
