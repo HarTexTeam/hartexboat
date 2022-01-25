@@ -29,6 +29,7 @@ import * as logger from "../base/logger.ts";
 
 import {
     gatewayIntents,
+    gatewayManager,
     restManager,
 } from "../base/rest.ts";
 
@@ -58,6 +59,7 @@ const baseBot: Bot = createBot({
     intents: gatewayIntents,
     token: startupVariables.botToken!,
 });
+baseBot.gateway = gatewayManager;
 baseBot.rest = restManager;
 
 export const bot = extendBotWithDetaCache(baseBot);

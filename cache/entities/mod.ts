@@ -19,3 +19,5 @@
  */
 
 export * from "./currentUser.ts";
+export * from "./guild.ts";
+export * from "./member.ts";

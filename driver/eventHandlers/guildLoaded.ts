@@ -22,7 +22,7 @@ import { getItemWithKey } from "../../base/deta.ts";
 
 import * as logger from "../../base/logger.ts";
 
-import { leaveGuild } from "../../base/discord.ts";
+import { GatewayOpcodes, leaveGuild } from "../../base/discord.ts";
 
 import { fromGuild } from "../../cache/entities/guild.ts";
 
@@ -41,9 +41,31 @@ export function setGuildLoadedEventHandler() {
             return;
         }
 
-        logger.debug("guild is whitelisted");
+        logger.debug(`guild ${guild.id} is whitelisted`);
 
         const guildEntity = fromGuild(guild);
         await bot.detaCache.guildRepository.upsert(guildEntity);
+
+        logger.debug(`requesting guild members of guild ${guild.id}`);
+
+        bot.gateway.shards.forEach(shard => {
+            const nonce = `${guild.id}-requestguildmembers-${Date.now()}`;
+
+            bot.gateway.sendShardMessage(
+                bot.gateway,
+                shard.id,
+                {
+                    op: GatewayOpcodes.RequestGuildMembers,
+                    d: {
+                        guild_id: guild.id.toString(),
+                        query: "",
+                        presences: false,
+                        limit: 0,
+                        nonce,
+                    },
+                },
+                true,
+            );
+        });
     };
 }

@@ -19,9 +19,11 @@
  */
 
 import { setGuildLoadedEventHandler } from "./guildLoaded.ts";
+import { setRawEventHandler } from "./raw.ts";
 import { setReadyEventHandler } from "./ready.ts";
 
 export function setupEventHandlers() {
     setGuildLoadedEventHandler();
+    setRawEventHandler();
     setReadyEventHandler();
 }

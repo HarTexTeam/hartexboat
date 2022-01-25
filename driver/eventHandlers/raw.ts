@@ -18,12 +18,18 @@
  * along with HartexBoat.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-export interface Entity {
-    uniqueEntityId: EntityId;
-}
+import * as logger from "../../base/logger.ts";
 
-export type EntityId = string | [ string, string ]
+import { guildMembersChunkEventHandler } from "./rawEventHandlers/guildMembersChunk.ts";
 
-export function entityIdIsString(entityId: EntityId): entityId is string {
-    return (entityId as string) !== undefined;
+import { bot } from "../main.ts";
+
+export function setRawEventHandler() {
+    bot.events.raw = async (_denoBot, payload, _shardId) => {
+        logger.debug(`received event of type $${payload.t}`);
+
+        if (payload.t === "GUILD_MEMBERS_CHUNK") {
+            await guildMembersChunkEventHandler(payload);
+        }
+    }
 }

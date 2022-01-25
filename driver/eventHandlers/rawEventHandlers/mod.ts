@@ -18,12 +18,4 @@
  * along with HartexBoat.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-export interface Entity {
-    uniqueEntityId: EntityId;
-}
-
-export type EntityId = string | [ string, string ]
-
-export function entityIdIsString(entityId: EntityId): entityId is string {
-    return (entityId as string) !== undefined;
-}
+export * from "./guildMembersChunk.ts";

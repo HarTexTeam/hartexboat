@@ -24,7 +24,8 @@ import { Bot } from "../base/discord.ts";
 
 import { CurrentUserEntity, CurrentUserRepository } from "./entities/currentUser.ts";
 import { GuildEntity, GuildRepository } from "./entities/guild.ts";
-import { EntityId } from "./entity.ts";
+import { MemberEntity, MemberRepository } from "./entities/member.ts";
+import { EntityId, entityIdIsString } from "./entity.ts";
 
 export type BotWithDetaCache = Bot & DetaCache;
 
@@ -35,6 +36,7 @@ export interface DetaCache extends Bot {
 export interface DetaCacheRepositories {
     currentUserRepository: CurrentUserRepository;
     guildRepository: GuildRepository;
+    memberRepository: MemberRepository;
 }
 
 export function createDetaCacheRepositories(): DetaCacheRepositories {
@@ -79,7 +81,7 @@ export function createDetaCacheRepositories(): DetaCacheRepositories {
                             premiumType: entity.premiumType,
                             publicFlags: entity.publicFlags,
                             verified: entity.verified,
-                        }
+                        },
                     ],
                 };
 
@@ -87,6 +89,64 @@ export function createDetaCacheRepositories(): DetaCacheRepositories {
             },
         } as CurrentUserRepository,
         guildRepository: {
+            get: async (entityId: EntityId) => {
+                if (entityIdIsString(entityId)) {
+                    const response = await getItemWithKey("GuildRepository", entityId);
+
+                    if (response.ok) {
+                        const json = await response.json();
+
+                        return {
+                            afkChannelId: json.afkChannelId,
+                            afkTimeout: json.afkTimeout,
+                            applicationId: json.applicationId,
+                            approximateMemberCount: json.approximateMemberCount,
+                            approximatePresenceCount: json.approximatePresenceCount,
+                            banner: json.banner,
+                            defaultMessageNotifications: json.defaultMessageNotifications,
+                            description: json.description,
+                            discoverySplash: json.discoverySplash,
+                            emojiIds: json.emojiIds,
+                            explicitContentFilter: json.explicitContentFilter,
+                            features: json.features,
+                            icon: json.icon,
+                            iconHash: json.iconHash,
+                            id: json.id,
+                            joinedAt: json.joinedAt,
+                            large: json.large,
+                            maxMembers: json.maxMembers,
+                            maxPresences: json.maxPresences,
+                            maxVideoChannelUsers: json.maxVideoChannelUsers,
+                            memberCount: json.memberCount,
+                            mfaLevel: json.mfaLevel,
+                            name: json.name,
+                            nsfwLevel: json.nsfwLevel,
+                            ownerId: json.ownerId,
+                            permissions: json.permissions,
+                            preferredLocale: json.preferredLocale,
+                            premiumProgressBarEnabled: json.premiumProgressBarEnabled,
+                            premiumSubscriptionCount: json.premiumSubscriptionCount,
+                            premiumTier: json.premiumTier,
+                            publicUpdatesChannelId: json.publicUpdatesChannelId,
+                            roleIds: json.roleIds,
+                            rulesChannelId: json.rulesChannelId,
+                            splash: json.splash,
+                            stageInstanceIds: json.stageInstanceIds,
+                            systemChannelFlags: json.systemChannelFlags,
+                            systemChannelId: json.systemChannelId,
+                            threadIds: json.threadIds,
+                            unavailable: json.unavailable,
+                            vanityUrlCode: json.vanityUrlCode,
+                            voiceStateUserIds: json.voiceStateUserIds,
+                            welcomeScreen: json.welcomeScreen,
+                            widgetChannelId: json.widgetChannelId,
+                            widgetEnabled: json.widgetEnabled,
+
+                            uniqueEntityId: json.key,
+                        } as GuildEntity;
+                    }
+                }
+            },
             upsert: async (entity: GuildEntity) => {
                 const bodyObject = {
                     items: [
@@ -136,12 +196,84 @@ export function createDetaCacheRepositories(): DetaCacheRepositories {
                             welcomeScreen: entity.welcomeScreen,
                             widgetChannelId: entity.widgetChannelId,
                             widgetEnabled: entity.widgetEnabled,
-                        }
-                    ]
+                        },
+                    ],
                 };
 
                 await addItems("GuildRepository", bodyObject);
             },
         } as GuildRepository,
+        memberRepository: {
+            get: async (entityId: EntityId) => {
+                if (entityIdIsString(entityId)) {
+                    const response = await getItemWithKey("MemberRepository", entityId);
+
+                    if (response.ok) {
+                        const json = await response.json();
+
+                        return {
+                            avatar: json.avatar,
+                            communicationDisabledUntil: json.communicationDisabledUntil,
+                            deaf: json.deaf,
+                            joinedAt: json.joinedAt,
+                            mute: json.mute,
+                            nick: json.nick,
+                            pending: json.pending,
+                            permissions: json.permissions,
+                            premiumSince: json.premiumSince,
+                            userId: json.userId,
+
+                            uniqueEntityId: json.key,
+                        } as MemberEntity;
+                    }
+                }
+            },
+            upsert: async (entity: MemberEntity) => {
+                const bodyObject = {
+                    items: [
+                        {
+                            key: entity.uniqueEntityId,
+                            
+                            avatar: entity.avatar,
+                            communicationDisabledUntil: entity.communicationDisabledUntil,
+                            deaf: entity.deaf,
+                            joinedAt: entity.joinedAt,
+                            mute: entity.mute,
+                            nick: entity.nick,
+                            pending: entity.pending,
+                            permissions: entity.permissions,
+                            premiumSince: entity.premiumSince,
+                            userId: entity.userId,
+                        },
+                    ],
+                };
+
+                await addItems("MemberRepository", bodyObject);
+            },
+            upsertMany: async (entities: MemberEntity[]) => {
+                const bodyObject = {
+                    items: entities.map(entity => {
+                        const obj = {
+                            key: entity.uniqueEntityId,
+                            
+                            avatar: entity.avatar,
+                            communicationDisabledUntil: entity.communicationDisabledUntil,
+                            deaf: entity.deaf,
+                            joinedAt: entity.joinedAt,
+                            mute: entity.mute,
+                            nick: entity.nick,
+                            pending: entity.pending,
+                            permissions: entity.permissions,
+                            premiumSince: entity.premiumSince,
+                            userId: entity.userId,
+                        };
+
+                        obj
+                    }),
+                };
+
+                await addItems("MemberRepository", bodyObject);
+            }
+        },
     } as DetaCacheRepositories;
 }
