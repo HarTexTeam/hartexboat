@@ -137,11 +137,11 @@ async function handleRestConnection(connection: Deno.Conn) {
             new Response(
                 JSON.stringify({
                     code: 200,
-                    message: "ok"
+                    message: "ok",
                 }),
                 {
                     status: 200,
-                    statusText: "OK"
+                    statusText: "OK",
                 },
             ),
         );

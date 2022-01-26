@@ -48,7 +48,9 @@ export function setGuildLoadedEventHandler() {
 
         logger.debug(`requesting guild members of guild ${guild.id}`);
 
-        bot.gateway.shards.forEach(shard => {
+        for (const [_, shard] of bot.gateway.shards) {
+            logger.debug(`iteration ${shard.id}`);
+
             const nonce = `${guild.id}-requestguildmembers-${Date.now()}`;
 
             bot.gateway.sendShardMessage(
@@ -66,6 +68,6 @@ export function setGuildLoadedEventHandler() {
                 },
                 true,
             );
-        });
+        }
     };
 }

@@ -36,8 +36,12 @@ import {
 } from "../env/lib.ts";
 
 createEnvironments();
+await logger.createLoggerEnvironment();
 
 export const restManager = createRestManager({
+    debug: (text) => {
+        logger.debug(`[REST MANAGER] ${text}`);
+    },
     token: startupVariables.botToken!,
     secretKey: authorizationVariables.restAuthorizationKey,
     customUrl: `http://localhost:${restVariables.restPort}`,
@@ -75,8 +79,13 @@ const result = await restManager.runMethod(restManager, "get", endpoints.GATEWAY
 }));
 
 export const gatewayManager = createGatewayManager({
+    debug: (text) => {
+        logger.debug(`[GATEWAY MANAGER] ${text}`);
+    },
     handleDiscordPayload: async function (_, data, shardId) {
         if (!data.t) return;
+
+        logger.debug(`received event from Discord gateway: ${data.t}`);
 
         await fetch(`http://localhost:${restVariables.eventHandlerPort}`, {
             headers: {
@@ -91,7 +100,7 @@ export const gatewayManager = createGatewayManager({
             .then((res) => res.text())
             .catch(() => null);
     },
-    identify: async function (gatewayManager, shardId, maxShards) {
+    identify: async function (_, shardId, maxShards) {
         logger.debug(`shard ${shardId} is identifying with the Discord gateway`);
 
         const oldShard = gatewayManager.shards.get(shardId);
