@@ -100,17 +100,17 @@ export const gatewayManager = createGatewayManager({
             .then((res) => res.text())
             .catch(() => null);
     },
-    identify: async function (_, shardId, maxShards) {
+    identify: function (gateway, shardId, maxShards) {
         logger.debug(`shard ${shardId} is identifying with the Discord gateway`);
 
-        const oldShard = gatewayManager.shards.get(shardId);
+        const oldShard = gateway.shards.get(shardId);
         if (oldShard) {
-            gatewayManager.closeWS(oldShard.ws, 3065, "re-identifying of old shard");
+            gateway.closeWS(oldShard.ws, 3065, "re-identifying of old shard");
             clearInterval(oldShard.heartbeat.intervalId);
         }
 
-        const socket = gatewayManager.createShard(gatewayManager, shardId);
-        gatewayManager.shards.set(
+        const socket = gateway.createShard(gateway, shardId);
+        gateway.shards.set(
             shardId,
             {
                 id: shardId,
@@ -137,20 +137,20 @@ export const gatewayManager = createGatewayManager({
         );
 
         socket.onopen = () => {
-            gatewayManager.sendShardMessage(
-                gatewayManager,
+            gateway.sendShardMessage(
+                gateway,
                 shardId,
                 {
                     op: GatewayOpcodes.Identify,
                     d: {
-                        token: gatewayManager.token,
-                        compress: gatewayManager.compress,
+                        token: gateway.token,
+                        compress: gateway.compress,
                         properties: {
-                            $os: gatewayManager.$os,
-                            $browser: gatewayManager.$browser,
-                            $device: gatewayManager.$device,
+                            $os: gateway.$os,
+                            $browser: gateway.$browser,
+                            $device: gateway.$device,
                         },
-                        intents: gatewayManager.intents,
+                        intents: gateway.intents,
                         shard: [shardId, maxShards],
                         presence: {
                             since: null,
@@ -168,6 +168,16 @@ export const gatewayManager = createGatewayManager({
                 true,
             );
         };
+
+        return new Promise(resolve => {
+            gateway.loadingShards.set(
+                shardId, 
+                {
+                    shardId,
+                    resolve,
+                }
+            )
+        });
     },
     intents: gatewayIntents,
     lastShardId: result.shards,
